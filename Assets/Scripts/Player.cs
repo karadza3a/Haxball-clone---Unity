@@ -8,18 +8,24 @@ public class Player : MonoBehaviour
 
 	private PressedKey pressedKeys = 0;
 
-	public Player (Team team)
-	{
-		this.team = team;
-	}
-
 	public bool isPressed (PressedKey key)
 	{
 		return (pressedKeys & key) != Player.PressedKey.None;
 	}
+
+	public void SetPressedKeys (PressedKey keys)
+	{
+		pressedKeys = keys;
+	}
 	
 	void Start ()
-	{
+	{		
+		// disable collisions with walls
+		GameObject[] walls = GameObject.FindGameObjectsWithTag ("Wall");
+		foreach (GameObject wall in walls) {
+			Physics2D.IgnoreCollision (wall.GetComponent<BoxCollider2D> (), GetComponent<CircleCollider2D> ());
+		}
+
 		Vector2 pos = new Vector2 ((((int)team) * 5), 0);
 		transform.position = pos;
 	}
