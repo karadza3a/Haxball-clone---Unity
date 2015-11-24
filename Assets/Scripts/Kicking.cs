@@ -14,7 +14,7 @@ public class Kicking : MonoBehaviour
 	void Start ()
 	{
 		colider = gameObject.GetComponent<CircleCollider2D> ();
-		player = gameObject.GetComponent<Player> ();
+		player = GetComponentInParent<Player> ();
 		GameObject ball = GameObject.FindGameObjectsWithTag ("Ball") [0];
 		ballColider = ball.GetComponent<CircleCollider2D> ();
 		ballBody = ball.GetComponent<Rigidbody2D> ();
