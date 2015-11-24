@@ -3,33 +3,33 @@ using System.Collections;
 
 public class Kicking : MonoBehaviour
 {
-	public float power = 20f;
+	public float power = 260f;
 
 	private CircleCollider2D colider;
 	private CircleCollider2D ballColider;
 	private Rigidbody2D ballBody;
+	private Player player;
 	private int lastKick = 0;
-
-	// Use this for initialization
+	
 	void Start ()
 	{
 		colider = gameObject.GetComponent<CircleCollider2D> ();
+		player = gameObject.GetComponent<Player> ();
 		GameObject ball = GameObject.FindGameObjectsWithTag ("Ball") [0];
 		ballColider = ball.GetComponent<CircleCollider2D> ();
 		ballBody = ball.GetComponent<Rigidbody2D> ();
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+	void FixedUpdate ()
 	{
-		if (Input.GetKey ("x") 
+		if (player.isPressed (Player.PressedKey.Shoot) 
 			&& lastKick <= Time.frameCount - 3
 			&& colider.IsTouching (ballColider)) {
 
 			Vector2 v = ballBody.gameObject.transform.position - transform.position;
 			v = v / v.magnitude;
-			Debug.Log (v.magnitude);
-			ballBody.AddForce (power * v);
+			v = v * power;
+			ballBody.AddForce (v);
 			lastKick = Time.frameCount;
 		}
 	}

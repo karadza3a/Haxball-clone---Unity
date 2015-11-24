@@ -3,37 +3,47 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour
 {
-	public float playerSpeed;
-	public float maxSpeed;
-
+	public float acceleration = 500;
+	public float shootDecceleration = .8f;
 	private Rigidbody2D rigidb;
-
-	// Use this for initialization
+	private Player player;
+	
 	void Start ()
 	{
 		rigidb = gameObject.GetComponent<Rigidbody2D> ();
+		player = gameObject.GetComponent<Player> ();
 	}
-	
-	// Update is called once per frame
-	void Update ()
+
+	void FixedUpdate ()
 	{
-		MoveForward ();
-		rigidb.velocity = Vector2.ClampMagnitude (rigidb.velocity, maxSpeed);
+		Move ();
 	}
 	
-	void MoveForward ()
+	void Move ()
 	{	
-		if (Input.GetKey ("up")) {//Press up arrow key to move forward on the Y AXIS
-			rigidb.AddForce (new Vector2 (0, playerSpeed * Time.deltaTime));
+		Vector2 v = new Vector2 (0, 0);
+		if (player.isPressed (Player.PressedKey.Up)) {
+			v += new Vector2 (0, 1);
 		}
-		if (Input.GetKey ("down")) {//Press up arrow key to move forward on the Y AXIS
-			rigidb.AddForce (new Vector2 (0, -playerSpeed * Time.deltaTime));
+		if (player.isPressed (Player.PressedKey.Down)) {
+			v += new Vector2 (0, -1);
 		}
-		if (Input.GetKey ("left")) {//Press up arrow key to move forward on the Y AXIS
-			rigidb.AddForce (new Vector2 (-playerSpeed * Time.deltaTime, 0));
+		if (player.isPressed (Player.PressedKey.Left)) {
+			v += new Vector2 (-1, 0);
 		}
-		if (Input.GetKey ("right")) {//Press up arrow key to move forward on the Y AXIS
-			rigidb.AddForce (new Vector2 (playerSpeed * Time.deltaTime, 0));
+		if (player.isPressed (Player.PressedKey.Right)) {
+			v += new Vector2 (1, 0);
 		}
+		AddLimitedForce (v);
+	}
+
+	void AddLimitedForce (Vector2 force)
+	{
+		force = force.normalized;
+		force = force * acceleration * Time.deltaTime;
+		if (player.isPressed (Player.PressedKey.Shoot)) {
+			force *= shootDecceleration;
+		}
+		rigidb.AddForce (force);
 	}
 }
