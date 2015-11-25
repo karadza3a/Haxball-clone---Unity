@@ -25,11 +25,9 @@ public class Player : MonoBehaviour
 		foreach (GameObject wall in walls) {
 			Physics2D.IgnoreCollision (wall.GetComponent<BoxCollider2D> (), GetComponent<CircleCollider2D> ());
 		}
-
-		Vector2 pos = new Vector2 ((((int)team) * 5), 0);
-		transform.position = pos;
+		GetComponent<PlayerMovement> ().reset ();
 	}
-	
+
 	public enum PressedKey
 	{
 		None = 0,

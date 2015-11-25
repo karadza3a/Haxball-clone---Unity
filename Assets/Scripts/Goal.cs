@@ -22,6 +22,12 @@ public class Goal : MonoBehaviour
 		if (ball.IsTouching (goalBox) && !ball.IsTouching (goalLine)) {
 			Debug.Log (team);
 			ball.gameObject.transform.position = new Vector2 (0, 0);
+			ball.attachedRigidbody.velocity = new Vector2 (0, 0);
+			
+			GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+			foreach (GameObject player in players) {
+				player.GetComponent<PlayerMovement> ().reset ();
+			}
 		}
 	}
 }

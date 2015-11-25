@@ -7,7 +7,18 @@ public class PlayerMovement : MonoBehaviour
 	public float shootDecceleration = .8f;
 	private Rigidbody2D rigidb;
 	private Player player;
-	
+
+	/**
+	 * Resets position, velocity and similar
+	 */
+	public void reset ()
+	{
+		Vector2 pos = new Vector2 (((int)player.team) * 5, 0);
+		transform.position = pos;
+		transform.rotation = Quaternion.identity;
+		rigidb.velocity = Vector2.zero;
+	}
+
 	void Start ()
 	{
 		rigidb = gameObject.GetComponent<Rigidbody2D> ();
