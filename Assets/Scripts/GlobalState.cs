@@ -1,13 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GlobalState : MonoBehaviour {
+public class GlobalState : MonoBehaviour
+{
 
-	public struct PlayerStruct{
+	public struct PlayerStruct
+	{
 		public string name;
 		public Player.Team team;
 		
-		public PlayerStruct(string name, Player.Team team){
+		public PlayerStruct (string name, Player.Team team)
+		{
 			this.name = name;
 			this.team = team;
 		}
@@ -15,12 +18,14 @@ public class GlobalState : MonoBehaviour {
 
 	public static int homeScore;
 	public static int awayScore;
+
 	public static ArrayList homePlayers;
 	public static ArrayList awayPlayers;
 	public static float time;
-	public static Stack newPlayers = new Stack(); 
+	public static Stack newPlayers = new Stack (); 
 
-	public static Player.Team getTeam(){
+	public static Player.Team getTeam ()
+	{
 		if (homePlayers.Count > awayPlayers.Count) {
 			return Player.Team.Away;
 		} else {
@@ -28,22 +33,26 @@ public class GlobalState : MonoBehaviour {
 		}
 	}
 
-	public static int getPlayersCount(){
+	public static int getPlayersCount ()
+	{
 		return homePlayers.Count + awayPlayers.Count;
 	}
 
-	public static string getScore(){
-		return homeScore.ToString() + ':' + awayScore.ToString();
+	public static string getScore ()
+	{
+		return homeScore.ToString () + ':' + awayScore.ToString ();
 	}
 
-	void Update(){
+	void Update ()
+	{
 		time = time + Time.deltaTime;
 	}
 
-	void Start(){
+	void Start ()
+	{
 		time = 0.0f;
-		homePlayers = new ArrayList ();
-		awayPlayers = new ArrayList ();
+		homePlayers = ArrayList.Synchronized (new ArrayList ());
+		awayPlayers = ArrayList.Synchronized (new ArrayList ());
 	}
 
 }
