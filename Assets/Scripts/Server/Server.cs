@@ -79,7 +79,7 @@ class AsyncUDP
 	public void Send (string message)
 	{
 		byte[] bytes = Encoding.ASCII.GetBytes (message);
-		int k = udp.Send (bytes, bytes.Length, "255.255.255.255", BROADCAST_PORT);
+		udp.Send (bytes, bytes.Length, "255.255.255.255", BROADCAST_PORT);
 	}
 }
 
