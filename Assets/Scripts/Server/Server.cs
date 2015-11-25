@@ -76,6 +76,7 @@ class AsyncUDP
 	{
 		udp.BeginReceive (Receive, new object ());
 	}
+
 	private void Receive (IAsyncResult asyncResult)
 	{
 		IPEndPoint ip = new IPEndPoint (IPAddress.Any, Server.LISTENING_PORT);
@@ -85,6 +86,7 @@ class AsyncUDP
 		Debug.Log (String.Format ("From {0} received: {1} ", ip.Address.ToString (), message));
 		StartListening ();
 	}
+
 	public void Send (string message)
 	{
 		byte[] bytes = Encoding.ASCII.GetBytes (message);
