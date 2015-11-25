@@ -17,14 +17,15 @@ public class Messager : MonoBehaviour
 		} else {
 			string[] words = msg.Split (';');
 			foreach (Player pl in GlobalState.awayPlayers){
-				if (pl.GetComponent<Player> ().username == words[1]){
-					pl.GetComponent<Player> ().SetPressedKeys((Player.PressedKey)int.Parse(words[2]));
+				if (pl.username == words[1]){
+					pl.SetPressedKeys((Player.PressedKey)int.Parse(words[2]));
 					return;
 				}
 			}
+
 			foreach (Player pl in GlobalState.homePlayers){
-				if (pl.GetComponent<Player> ().username == words[1]){
-					pl.GetComponent<Player> ().SetPressedKeys((Player.PressedKey)int.Parse(words[2]));
+				if (pl.username == words[1]){
+					pl.SetPressedKeys((Player.PressedKey)int.Parse(words[2]));
 					return;
 				}
 			}
@@ -33,23 +34,7 @@ public class Messager : MonoBehaviour
 
 	public static string getState ()
 	{
-		string msg = "";
-		//result
-		msg += "result:" + GlobalState.getScore () + ';';
-
-		//ball x,y,velocityX,velocityY
-		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
-		msg += "ball:" + ball.transform.position.x.ToString("N6") + ',' + ball.transform.position.y.ToString("N6") + ',' + ball.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + ball.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
-
-		//players username,tim,x,y,velocityX,velocityY
-		foreach (GameObject pl in GlobalState.awayPlayers){
-			msg += "player:" + pl.GetComponent<Player> ().username + ',' + pl.GetComponent<Player> ().team + ',' + pl.transform.position.x.ToString("N6") + ',' + pl.transform.position.y.ToString("N6") + ',' + pl.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + pl.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
-		}
-		foreach (GameObject pl in GlobalState.homePlayers){
-			msg += "player:" + pl.GetComponent<Player> ().username + ',' + pl.GetComponent<Player> ().team + ',' + pl.transform.position.x.ToString("N6") + ',' + pl.transform.position.y.ToString("N6") + ',' + pl.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + pl.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
-		}
-
-		return msg;
+		return GlobalState.msg;
 	}
 
 }
