@@ -18,6 +18,8 @@ public class GlobalState : MonoBehaviour
 		}
 	}
 
+	public static string msg;
+
 	public static int homeScore;
 	public static int awayScore;
 
@@ -47,6 +49,22 @@ public class GlobalState : MonoBehaviour
 
 	void Update (){
 		time = time + Time.deltaTime;
+
+		msg = "";
+		//result
+		msg += "result:" + GlobalState.getScore () + ';';
+		
+		//ball x,y,velocityX,velocityY
+		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
+		msg += "ball:" + ball.transform.position.x.ToString("N6") + ',' + ball.transform.position.y.ToString("N6") + ',' + ball.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + ball.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
+		
+		//players username,tim,x,y,velocityX,velocityY
+		foreach (Player pl in awayPlayers){
+			msg += "player:" + pl.username + ',' + pl.team + ',' + pl.gameObject.transform.position.x.ToString("N6") + ',' + pl.gameObject.transform.position.y.ToString("N6") + ',' + pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
+		}
+		foreach (Player pl in homePlayers){
+			msg += "player:" + pl.username + ',' + pl.team + ',' + pl.gameObject.transform.position.x.ToString("N6") + ',' + pl.gameObject.transform.position.y.ToString("N6") + ',' + pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString("N6") + ',' + pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString("N6") + ';';
+		}
 	}
 
 	void Start ()
@@ -62,10 +80,10 @@ public class GlobalState : MonoBehaviour
 			player = Instantiate (playerPrefab);
 			player.GetComponent<Player> ().team = newPlayer.team;
 			player.GetComponent<Player> ().username = newPlayer.name;
-			if (player.GetComponent<Player> ().team == Player.Team.Home){
-				homePlayers.Add(player);
+			if (newPlayer.team == Player.Team.Home){
+				homePlayers.Add(player.GetComponent<Player> ());
 			}else{
-				awayPlayers.Add(player);
+				awayPlayers.Add(player.GetComponent<Player> ());
 			}
 		}
 	}
