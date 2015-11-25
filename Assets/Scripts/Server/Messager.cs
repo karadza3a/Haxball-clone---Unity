@@ -18,5 +18,9 @@ public class Messager : MonoBehaviour {
 		}
 	}
 
+	public static string getState(){
+		string msg = "";
+		return msg;
+	}
 
 }
