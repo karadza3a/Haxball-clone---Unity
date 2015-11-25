@@ -84,8 +84,8 @@ class AsyncUDP
 		IPEndPoint ip = new IPEndPoint (IPAddress.Any, LISTENING_PORT);
 		byte[] bytes = udp.EndReceive (asyncResult, ref ip);
 		string message = Encoding.ASCII.GetString (bytes);
-		Messager.receiveMessage (message);
 		Debug.Log (String.Format ("From {0} received: {1} ", ip.Address.ToString (), message));
+		Messager.receiveMessage (message);
 		StartListening ();
 	}
 
