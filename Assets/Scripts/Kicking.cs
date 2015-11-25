@@ -9,8 +9,7 @@ public class Kicking : MonoBehaviour
 	private CircleCollider2D ballColider;
 	private Rigidbody2D ballBody;
 	private Player player;
-	private int lastKick = 0;
-	
+
 	void Start ()
 	{
 		colider = gameObject.GetComponent<CircleCollider2D> ();
@@ -23,14 +22,12 @@ public class Kicking : MonoBehaviour
 	void FixedUpdate ()
 	{
 		if (player.isPressed (Player.PressedKey.Shoot) 
-			&& lastKick <= Time.frameCount - 3
 			&& colider.IsTouching (ballColider)) {
 
 			Vector2 v = ballBody.gameObject.transform.position - transform.position;
 			v = v / v.magnitude;
 			v = v * power;
 			ballBody.AddForce (v);
-			lastKick = Time.frameCount;
 		}
 	}
 }
