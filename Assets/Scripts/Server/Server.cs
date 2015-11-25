@@ -10,7 +10,6 @@ public class Server : MonoBehaviour
 {
 	public int LISTENING_PORT = 15000;
 	public int BROADCAST_PORT = 16000;
-	public GameObject playerPrefab;
 
 	AsyncUDP udp;
 
@@ -27,17 +26,6 @@ public class Server : MonoBehaviour
 			udp.Send (msg);
 		} else if (Input.GetKey ("x")) {
 			udp.Stop ();
-		}
-	}
-
-	void FixedUpdate ()
-	{
-		if (GlobalState.newPlayers.Count > 0) {
-			GlobalState.PlayerStruct newPlayer = (GlobalState.PlayerStruct)GlobalState.newPlayers.Pop ();
-			GameObject player;
-			player = Instantiate (playerPrefab);
-			player.GetComponent<Player> ().team = newPlayer.team;
-			player.GetComponent<Player> ().username = newPlayer.name;
 		}
 	}
 }
@@ -93,7 +81,7 @@ class AsyncUDP
 	{
 		byte[] bytes = Encoding.ASCII.GetBytes (message);
 		int k = udp.Send (bytes, bytes.Length, "255.255.255.255", BROADCAST_PORT);
-		Debug.Log (String.Format ("Sent: {0}, {1} ", message, k));
+		Debug.Log (message);
 	}
 }
 

@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GlobalState : MonoBehaviour
 {
+	
+	public GameObject playerPrefab;
 
 	public struct PlayerStruct
 	{
@@ -19,10 +21,10 @@ public class GlobalState : MonoBehaviour
 	public static int homeScore;
 	public static int awayScore;
 
-	public static ArrayList homePlayers;
-	public static ArrayList awayPlayers;
+	public static ArrayList homePlayers = ArrayList.Synchronized (new ArrayList ());
+	public static ArrayList awayPlayers = ArrayList.Synchronized (new ArrayList ());
 	public static float time;
-	public static Stack newPlayers = new Stack (); 
+	public static Stack newPlayers = Stack.Synchronized(new Stack()); 
 
 	public static Player.Team getTeam ()
 	{
@@ -43,16 +45,29 @@ public class GlobalState : MonoBehaviour
 		return homeScore.ToString () + ':' + awayScore.ToString ();
 	}
 
-	void Update ()
-	{
+	void Update (){
 		time = time + Time.deltaTime;
 	}
 
 	void Start ()
 	{
 		time = 0.0f;
-		homePlayers = ArrayList.Synchronized (new ArrayList ());
-		awayPlayers = ArrayList.Synchronized (new ArrayList ());
+	}
+
+	void FixedUpdate ()
+	{
+		if (newPlayers.Count > 0) {
+			PlayerStruct newPlayer = (PlayerStruct)newPlayers.Pop ();
+			GameObject player;
+			player = Instantiate (playerPrefab);
+			player.GetComponent<Player> ().team = newPlayer.team;
+			player.GetComponent<Player> ().username = newPlayer.name;
+			if (player.GetComponent<Player> ().team == Player.Team.Home){
+				homePlayers.Add(player);
+			}else{
+				awayPlayers.Add(player);
+			}
+		}
 	}
 
 }
