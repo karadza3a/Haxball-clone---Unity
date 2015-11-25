@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class OfflinePlayer : MonoBehaviour
 {
 	public Player.Team team;
+	public string username;
 
 	[System.Serializable]
 	public struct Pair
@@ -16,12 +17,13 @@ public class OfflinePlayer : MonoBehaviour
 
 	public GameObject playerPrefab;
 
-	private GameObject player;
+	private Player player;
 
 	void Start ()
 	{
-		player = Instantiate (playerPrefab);
-		player.GetComponent<Player> ().team = team;
+		player = Instantiate (playerPrefab).GetComponent<Player> ();
+		player.team = team;
+		player.username = username;
 	}
 
 	void FixedUpdate ()
