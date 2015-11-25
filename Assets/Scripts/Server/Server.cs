@@ -23,16 +23,17 @@ public class Server : MonoBehaviour
 	void Update ()
 	{
 		if (Input.GetKey ("s")) {
-			string msg = Messager.getState();
+			string msg = Messager.getState ();
 			udp.Send (msg);
 		} else if (Input.GetKey ("x")) {
 			udp.Stop ();
 		}
 	}
 
-	void FixedUpdate(){
-		if (GlobalState.newPlayers.Count>0){
-			GlobalState.PlayerStruct newPlayer = (GlobalState.PlayerStruct) GlobalState.newPlayers.Pop ();
+	void FixedUpdate ()
+	{
+		if (GlobalState.newPlayers.Count > 0) {
+			GlobalState.PlayerStruct newPlayer = (GlobalState.PlayerStruct)GlobalState.newPlayers.Pop ();
 			GameObject player;
 			player = Instantiate (playerPrefab);
 			player.GetComponent<Player> ().team = newPlayer.team;
@@ -46,10 +47,13 @@ class AsyncUDP
 	Thread thread = null;
 	int LISTENING_PORT;
 	int BROADCAST_PORT;
+	readonly UdpClient udp;
 
-	public AsyncUDP(int LISTENING_PORT, int BROADCAST_PORT){
+	public AsyncUDP (int LISTENING_PORT, int BROADCAST_PORT)
+	{
 		this.LISTENING_PORT = LISTENING_PORT;
 		this.BROADCAST_PORT = BROADCAST_PORT;
+		udp = new UdpClient (LISTENING_PORT);
 	}
 
 	public void Start ()
@@ -70,8 +74,6 @@ class AsyncUDP
 		}
 	}
 			
-	private readonly UdpClient udp = new UdpClient (LISTENING_PORT);
-			
 	private void StartListening ()
 	{
 		udp.BeginReceive (Receive, new object ());
@@ -79,7 +81,7 @@ class AsyncUDP
 
 	private void Receive (IAsyncResult asyncResult)
 	{
-		IPEndPoint ip = new IPEndPoint (IPAddress.Any, Server.LISTENING_PORT);
+		IPEndPoint ip = new IPEndPoint (IPAddress.Any, LISTENING_PORT);
 		byte[] bytes = udp.EndReceive (asyncResult, ref ip);
 		string message = Encoding.ASCII.GetString (bytes);
 		Messager.receiveMessage (message);
@@ -90,7 +92,7 @@ class AsyncUDP
 	public void Send (string message)
 	{
 		byte[] bytes = Encoding.ASCII.GetBytes (message);
-		int k = udp.Send (bytes, bytes.Length, "255.255.255.255", Server.BROADCAST_PORT);
+		int k = udp.Send (bytes, bytes.Length, "255.255.255.255", BROADCAST_PORT);
 		Debug.Log (String.Format ("Sent: {0}, {1} ", message, k));
 	}
 }
