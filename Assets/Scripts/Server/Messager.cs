@@ -5,9 +5,8 @@ using System.Threading;
 public class Messager : MonoBehaviour
 {
 	// login args = l;username
-	// play args  = p;username;number(bitmask) 
-	// login back args = tim;velicinaterena;stative
-	// play back args = result;ball;allPlayers
+	// play args  = p;username;number(bitmask)
+	// play back args = result;ball position and velocity;player1(position and velocity);player2(position and velocity)...
 
 	public static void receiveMessage (string msg)
 	{

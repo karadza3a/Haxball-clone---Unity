@@ -47,24 +47,26 @@ public class GlobalState : MonoBehaviour
 		msg += ball.transform.position.x.ToString ("N6") + ',' 
 			+ ball.transform.position.y.ToString ("N6") + ',' 
 			+ ball.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-			+ ball.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6") + ';';
+			+ ball.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 		
 		//players username,tim,x,y,velocityX,velocityY
 		foreach (Player pl in awayPlayers) {
-			msg += pl.username + ',' 
+			msg += ';'
+				+ pl.username + ',' 
 				+ pl.team + ',' 
 				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
 				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
 				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6") + ';';
+				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 		}
 		foreach (Player pl in homePlayers) {
-			msg += pl.username + ',' 
+			msg += ';'
+				+ pl.username + ',' 
 				+ pl.team + ',' 
 				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
 				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
 				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6") + ';';
+				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 		}
 	}
 
