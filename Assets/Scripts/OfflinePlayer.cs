@@ -4,30 +4,34 @@ using System.Collections.Generic;
 
 public class OfflinePlayer : MonoBehaviour
 {
-	public Player.Team team;
 	public string username;
-
-	[System.Serializable]
-	public struct Pair
-	{
-		public char Key;
-		public Player.PressedKey Value;
-	}
 	public Pair[] keys;
-
-	public GameObject playerPrefab;
 
 	private Player player;
 
 	void Start ()
 	{
-		player = Instantiate (playerPrefab).GetComponent<Player> ();
-		player.team = team;
-		player.username = username;
+		Messager.receiveMessage (string.Format ("l;{0}", username));
 	}
 
 	void FixedUpdate ()
 	{
+		if (player == null) {
+			foreach (Player pl in GlobalState.awayPlayers) {
+				if (pl.username == username) {
+					player = pl;
+					break;
+				}
+			}
+			foreach (Player pl in GlobalState.homePlayers) {
+				if (pl.username == username) {
+					player = pl;
+					break;
+				}
+			}
+			//not initialized yet - return
+			return;
+		}
 		Player.PressedKey pressed = 0;
 		foreach (Pair entry in keys) {
 			if (Input.GetKey ("" + entry.Key)) {
@@ -35,5 +39,12 @@ public class OfflinePlayer : MonoBehaviour
 			}
 		}
 		player.GetComponent<Player> ().SetPressedKeys (pressed);
+	}
+	
+	[System.Serializable]
+	public struct Pair
+	{
+		public char Key;
+		public Player.PressedKey Value;
 	}
 }
