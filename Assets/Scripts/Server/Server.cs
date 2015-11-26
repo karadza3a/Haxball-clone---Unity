@@ -21,12 +21,8 @@ public class Server : MonoBehaviour
 
 	void Update ()
 	{
-		if (Input.GetKey ("s")) {
-			string msg = Messager.getState ();
-			udp.Send (msg);
-		} else if (Input.GetKey ("x")) {
-			udp.Stop ();
-		}
+		string msg = Messager.getState ();
+		udp.Send (msg);
 	}
 }
 
