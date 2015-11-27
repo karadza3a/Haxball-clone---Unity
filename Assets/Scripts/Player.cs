@@ -6,6 +6,7 @@ public class Player : MonoBehaviour
 	public float startX = 5f;
 	public Team team;
 	public string username;
+	public int id;
 
 	private PressedKey pressedKeys = 0;
 

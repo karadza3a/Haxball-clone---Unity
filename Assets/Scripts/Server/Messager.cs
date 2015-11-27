@@ -6,7 +6,7 @@ public class Messager : MonoBehaviour
 {
 	// login args = l;username
 	// play args  = p;username;number(bitmask)
-	// play back args = result;ball position and velocity;player1(position and velocity);player2(position and velocity)...
+	// play back args = result;ball position and velocity;player1;player2...
 
 	public static void receiveMessage (string msg)
 	{

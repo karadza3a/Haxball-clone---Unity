@@ -6,6 +6,8 @@ public class GlobalState : MonoBehaviour
 	
 	public GameObject playerPrefab;
 	public static string msg;
+	public Sprite homeKit;
+	public Sprite awayKit;
 
 	public static int homeScore;
 	public static int awayScore;
@@ -49,20 +51,22 @@ public class GlobalState : MonoBehaviour
 			+ ball.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
 			+ ball.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 		
-		//players username,tim,x,y,velocityX,velocityY
+		//players team,id,username,x,y,velocityX,velocityY
 		foreach (Player pl in awayPlayers) {
-			msg += ';'
-				+ pl.username + ',' 
+			msg += ";"
 				+ pl.team + ',' 
+				+ pl.id + ',' 
+				+ pl.username + ',' 
 				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
 				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
 				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
 				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 		}
 		foreach (Player pl in homePlayers) {
-			msg += ';'
-				+ pl.username + ',' 
+			msg += ";"
 				+ pl.team + ',' 
+				+ pl.id + ',' 
+				+ pl.username + ',' 
 				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
 				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
 				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
@@ -83,13 +87,17 @@ public class GlobalState : MonoBehaviour
 			Player player;
 			player = Instantiate (playerPrefab).GetComponent<Player> ();
 			player.team = GlobalState.getTeam ();
-			player.username = username;
 
 			if (player.team == Player.Team.Home) {
 				homePlayers.Add (player.GetComponent<Player> ());
 			} else {
 				awayPlayers.Add (player.GetComponent<Player> ());
 			}
+
+			player.username = username;
+			player.id = GlobalState.getPlayersCount ();
+			player.GetComponent<SpriteRenderer> ().sprite = (player.team == Player.Team.Home) ? homeKit : awayKit;
+
 		}
 	}
 
