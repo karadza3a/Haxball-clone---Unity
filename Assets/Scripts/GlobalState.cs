@@ -84,6 +84,8 @@ public class GlobalState : MonoBehaviour
 		while (newPlayers.Count > 0) {
 			string username = (string)newPlayers.Pop ();
 
+			if (usernameExists(username)) continue;
+
 			Player player;
 			player = Instantiate (playerPrefab).GetComponent<Player> ();
 			player.team = GlobalState.getTeam ();
@@ -99,6 +101,17 @@ public class GlobalState : MonoBehaviour
 			player.GetComponent<SpriteRenderer> ().sprite = (player.team == Player.Team.Home) ? homeKit : awayKit;
 
 		}
+	}
+
+	bool usernameExists(string name){
+		foreach (Player pl in awayPlayers) {
+			if (pl.username == name) return true;
+		}
+		foreach (Player pl in homePlayers) {
+			if (pl.username == name) return true;
+		}
+		return false;
+
 	}
 
 }
