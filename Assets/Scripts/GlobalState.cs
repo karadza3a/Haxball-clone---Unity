@@ -5,19 +5,75 @@ public class GlobalState : MonoBehaviour
 {
 	
 	public GameObject playerPrefab;
-	public static string msg;
 	public Sprite homeKit;
 	public Sprite awayKit;
 
+	public static bool gameStarted;
 	public static int homeScore;
 	public static int awayScore;
-
 	public static ArrayList homePlayers = ArrayList.Synchronized (new ArrayList ());
 	public static ArrayList awayPlayers = ArrayList.Synchronized (new ArrayList ());
 	public static float time;
 	public static Stack newPlayers = Stack.Synchronized (new Stack ()); 
+	
+	public static string GetMessage ()
+	{
+		if (gameStarted) {
+			return GameState ();
+		} else if (Input.GetKeyDown ("p")) {
+			// start the game now
+			gameStarted = true;
+			return PreKickoffState ();
+		} else {
+			return null;
+		}
+	}
+	
+	public static string GameState ()
+	{
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 
-	public static Player.Team getTeam ()
+		//ball x,y,velocityX,velocityY
+		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
+		sb.Append (GameObjectString (ball));
+		
+		//players team,id,username,x,y,velocityX,velocityY
+		foreach (Player pl in awayPlayers) {
+			sb.Append (";"
+				+ pl.id + ',' 
+				+ GameObjectString (pl.gameObject));
+		}
+		foreach (Player pl in homePlayers) {
+			sb.Append (";"
+				+ pl.id + ',' 
+				+ GameObjectString (pl.gameObject));
+		}
+		return sb.ToString ();
+	}
+	
+	public static string PreKickoffState ()
+	{
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+		//result
+		sb.Append (GlobalState.getScore ());
+
+		//players team,id,username
+		foreach (Player pl in awayPlayers) {
+			sb.Append (";"
+				+ pl.team + ',' 
+				+ pl.id + ',' 
+				+ pl.username);
+		}
+		foreach (Player pl in homePlayers) {
+			sb.Append (";"
+				+ pl.team + ',' 
+				+ pl.id + ',' 
+				+ pl.username);
+		}
+		return sb.ToString ();
+	}
+
+	public static Player.Team GetTeam ()
 	{
 		if (homePlayers.Count > awayPlayers.Count) {
 			return Player.Team.Away;
@@ -26,7 +82,7 @@ public class GlobalState : MonoBehaviour
 		}
 	}
 
-	public static int getPlayersCount ()
+	public static int GetPlayersCount ()
 	{
 		return homePlayers.Count + awayPlayers.Count;
 	}
@@ -39,39 +95,6 @@ public class GlobalState : MonoBehaviour
 	void Update ()
 	{
 		time = time + Time.deltaTime;
-
-		msg = "";
-		//result
-		msg += GlobalState.getScore () + ';';
-		
-		//ball x,y,velocityX,velocityY
-		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
-		msg += ball.transform.position.x.ToString ("N6") + ',' 
-			+ ball.transform.position.y.ToString ("N6") + ',' 
-			+ ball.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-			+ ball.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
-		
-		//players team,id,username,x,y,velocityX,velocityY
-		foreach (Player pl in awayPlayers) {
-			msg += ";"
-				+ pl.team + ',' 
-				+ pl.id + ',' 
-				+ pl.username + ',' 
-				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
-				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
-		}
-		foreach (Player pl in homePlayers) {
-			msg += ";"
-				+ pl.team + ',' 
-				+ pl.id + ',' 
-				+ pl.username + ',' 
-				+ pl.gameObject.transform.position.x.ToString ("N6") + ',' 
-				+ pl.gameObject.transform.position.y.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
-				+ pl.gameObject.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
-		}
 	}
 
 	void Start ()
@@ -84,11 +107,12 @@ public class GlobalState : MonoBehaviour
 		while (newPlayers.Count > 0) {
 			string username = (string)newPlayers.Pop ();
 
-			if (usernameExists(username)) continue;
+			if (UsernameExists (username))
+				continue;
 
 			Player player;
 			player = Instantiate (playerPrefab).GetComponent<Player> ();
-			player.team = GlobalState.getTeam ();
+			player.team = GlobalState.GetTeam ();
 
 			if (player.team == Player.Team.Home) {
 				homePlayers.Add (player.GetComponent<Player> ());
@@ -97,21 +121,31 @@ public class GlobalState : MonoBehaviour
 			}
 
 			player.username = username;
-			player.id = GlobalState.getPlayersCount ();
+			player.id = GlobalState.GetPlayersCount ();
 			player.GetComponent<SpriteRenderer> ().sprite = (player.team == Player.Team.Home) ? homeKit : awayKit;
 
 		}
 	}
 
-	bool usernameExists(string name){
+	bool UsernameExists (string name)
+	{
 		foreach (Player pl in awayPlayers) {
-			if (pl.username == name) return true;
+			if (pl.username == name)
+				return true;
 		}
 		foreach (Player pl in homePlayers) {
-			if (pl.username == name) return true;
+			if (pl.username == name)
+				return true;
 		}
 		return false;
 
 	}
-
+	
+	static string GameObjectString (GameObject go)
+	{
+		return go.transform.position.x.ToString ("N6") + ',' 
+			+ go.transform.position.y.ToString ("N6") + ',' 
+			+ go.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
+			+ go.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
+	}
 }

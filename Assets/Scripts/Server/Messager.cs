@@ -31,9 +31,4 @@ public class Messager : MonoBehaviour
 		}
 	}
 
-	public static string getState ()
-	{
-		return GlobalState.msg;
-	}
-
 }
