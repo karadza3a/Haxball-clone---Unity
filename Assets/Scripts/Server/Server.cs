@@ -19,7 +19,7 @@ public class Server : MonoBehaviour
 		udp.Start ();
 	}
 
-	void Update ()
+	void FixedUpdate ()
 	{
 		string msg = GlobalState.GetMessage ();
 		if (msg != null)
