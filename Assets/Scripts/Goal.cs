@@ -20,7 +20,7 @@ public class Goal : MonoBehaviour
 	void Update ()
 	{
 		if (ball.IsTouching (goalBox) && !ball.IsTouching (goalLine)) {
-			Debug.Log (team);
+			GlobalState.TeamScored(team);
 
 			ball.gameObject.transform.position = new Vector2 (0, 0);
 			ball.attachedRigidbody.velocity = new Vector2 (0, 0);

@@ -9,6 +9,7 @@ public class GlobalState : MonoBehaviour
 	public Sprite awayKit;
 
 	public static bool gameStarted;
+	public static bool goalScored;
 	public static int homeScore;
 	public static int awayScore;
 	public static ArrayList homePlayers = ArrayList.Synchronized (new ArrayList ());
@@ -19,8 +20,12 @@ public class GlobalState : MonoBehaviour
 	public static string GetMessage ()
 	{
 		if (gameStarted) {
+			if (goalScored){
+				goalScored=false;
+				return GoalState();
+			}
 			if (Input.GetKeyDown ("r")){
-				resetAll();
+				ResetAll();
 				gameStarted=false;
 				return null;
 			}else return GameState ();
@@ -33,7 +38,7 @@ public class GlobalState : MonoBehaviour
 		}
 	}
 
-	public static void resetAll(){
+	public static void ResetAll(){
 		CircleCollider2D ball = GameObject.FindGameObjectWithTag ("Ball").GetComponent<CircleCollider2D> ();
 		ball.gameObject.transform.position = new Vector2 (0, 0);
 		ball.attachedRigidbody.velocity = new Vector2 (0, 0);
@@ -68,13 +73,39 @@ public class GlobalState : MonoBehaviour
 		}
 		return sb.ToString ();
 	}
+
+	public static string GoalState ()
+	{
+		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
+		
+		sb.Append("g;");
+
+		//result x-y
+		sb.Append (getScore());
+
+		//ball x,y,velocityX,velocityY
+		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
+		sb.Append (";" + GameObjectString (ball));
+		
+		//players team,id,username,x,y,velocityX,velocityY
+		foreach (Player pl in awayPlayers) {
+			sb.Append (";"
+			           + pl.id + ',' 
+			           + GameObjectString (pl.gameObject));
+		}
+		foreach (Player pl in homePlayers) {
+			sb.Append (";"
+			           + pl.id + ',' 
+			           + GameObjectString (pl.gameObject));
+		}
+		return sb.ToString ();
+	}
 	
 	public static string PreKickoffState ()
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 		//result
-		sb.Append ("k;");
-		sb.Append (GlobalState.getScore ());
+		sb.Append ("k");
 
 		//players team,id,username
 		foreach (Player pl in awayPlayers) {
@@ -166,5 +197,14 @@ public class GlobalState : MonoBehaviour
 			+ go.transform.position.y.ToString ("N6") + ',' 
 			+ go.GetComponent<Rigidbody2D> ().velocity.x.ToString ("N6") + ',' 
 			+ go.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
+	}
+
+	public static void TeamScored(Player.Team team){
+		if (Player.Team == Player.Team.Away) {
+			awayScore++;
+		} else {
+			homeScore++;
+		}
+		goalScored = true;
 	}
 }
