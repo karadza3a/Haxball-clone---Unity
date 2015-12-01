@@ -19,7 +19,11 @@ public class GlobalState : MonoBehaviour
 	public static string GetMessage ()
 	{
 		if (gameStarted) {
-			return GameState ();
+			if (Input.GetKeyDown ("r")){
+				resetAll();
+				gameStarted=false;
+				return null;
+			}else return GameState ();
 		} else if (Input.GetKeyDown ("p")) {
 			// start the game now
 			gameStarted = true;
@@ -28,11 +32,25 @@ public class GlobalState : MonoBehaviour
 			return null;
 		}
 	}
+
+	public static void resetAll(){
+		CircleCollider2D ball = GameObject.FindGameObjectWithTag ("Ball").GetComponent<CircleCollider2D> ();
+		ball.gameObject.transform.position = new Vector2 (0, 0);
+		ball.attachedRigidbody.velocity = new Vector2 (0, 0);
+		
+		GameObject[] players = GameObject.FindGameObjectsWithTag ("Player");
+		foreach (GameObject player in players) {
+			player.GetComponent<PlayerMovement> ().reset ();
+		}
+		homeScore = 0;
+		awayScore = 0;
+	}
 	
 	public static string GameState ()
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 
+		sb.Append("p;");
 		//ball x,y,velocityX,velocityY
 		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
 		sb.Append (GameObjectString (ball));
@@ -55,6 +73,7 @@ public class GlobalState : MonoBehaviour
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 		//result
+		sb.Append ("k;");
 		sb.Append (GlobalState.getScore ());
 
 		//players team,id,username
