@@ -5,9 +5,13 @@ public class GlobalState : MonoBehaviour
 {
 	
 	public GameObject playerPrefab;
+	public GameObject homeLeftPost;
+	public GameObject topWall;
+
 	public Sprite homeKit;
 	public Sprite awayKit;
-
+	
+	public static string constants;
 	public static bool gameStarted;
 	public static bool goalScored;
 	public static int homeScore;
@@ -95,6 +99,8 @@ public class GlobalState : MonoBehaviour
 		//result
 		sb.Append ("k");
 
+		sb.Append (GlobalState.constants);
+
 		//players team,id,username
 		foreach (Player pl in awayPlayers) {
 			sb.Append (";"
@@ -108,7 +114,32 @@ public class GlobalState : MonoBehaviour
 				+ pl.id + ',' 
 				+ pl.username);
 		}
+
 		return sb.ToString ();
+	}
+
+	public void initConstants ()
+	{
+		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
+		GameObject kicker = playerPrefab.transform.Find ("Kicker").gameObject;
+
+		float xMax = Mathf.Abs (homeLeftPost.transform.position.x);
+		float yMax = Mathf.Abs (topWall.GetComponent<BoxCollider2D> ().bounds.min.y);
+		float goalPostY = Mathf.Abs (homeLeftPost.transform.position.y);
+		float goalPostRadius = homeLeftPost.GetComponent<CircleCollider2D> ().radius * homeLeftPost.transform.localScale.x;
+		float ballRadius = ball.GetComponent<CircleCollider2D> ().radius * ball.transform.localScale.x;
+		float playerRadius = playerPrefab.GetComponent<CircleCollider2D> ().radius * playerPrefab.transform.localScale.x;
+		float kickerRadius = kicker.GetComponent<CircleCollider2D> ().radius * kicker.transform.localScale.x * playerPrefab.transform.localScale.x;
+
+		constants =
+			xMax.ToString ("N6") + ","
+			+ yMax.ToString ("N6") + ","
+			+ goalPostY.ToString ("N6") + ","
+			+ goalPostRadius.ToString ("N6") + ","
+			+ ballRadius.ToString ("N6") + ","
+			+ playerRadius.ToString ("N6") + ","
+			+ kickerRadius.ToString ("N6");
+		Debug.Log (constants);
 	}
 
 	public static Player.Team GetTeam ()
@@ -137,6 +168,7 @@ public class GlobalState : MonoBehaviour
 
 	void Start ()
 	{
+		initConstants ();
 		time = 0.0f;
 	}
 

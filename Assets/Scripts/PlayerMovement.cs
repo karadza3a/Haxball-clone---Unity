@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 	void AddLimitedForce (Vector2 force)
 	{
 		force = force.normalized;
-		force = force * acceleration * Time.deltaTime;
+		force = force * acceleration * 0.02f;
 		if (player.isPressed (Player.PressedKey.Shoot)) {
 			force *= shootDecceleration;
 		}
