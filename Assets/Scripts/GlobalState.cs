@@ -20,15 +20,17 @@ public class GlobalState : MonoBehaviour
 	public static string GetMessage ()
 	{
 		if (gameStarted) {
-			if (goalScored){
-				goalScored=false;
-				return GoalState();
+			if (goalScored) {
+				goalScored = false;
+				return GoalState ();
 			}
-			if (Input.GetKeyDown ("r")){
-				ResetAll();
-				gameStarted=false;
+			if (Input.GetKeyDown ("r")) {
+				ResetAll ();
+				gameStarted = false;
+				goalScored = false;
 				return null;
-			}else return GameState ();
+			} else
+				return GameState ();
 		} else if (Input.GetKeyDown ("p")) {
 			// start the game now
 			gameStarted = true;
@@ -38,7 +40,8 @@ public class GlobalState : MonoBehaviour
 		}
 	}
 
-	public static void ResetAll(){
+	public static void ResetAll ()
+	{
 		CircleCollider2D ball = GameObject.FindGameObjectWithTag ("Ball").GetComponent<CircleCollider2D> ();
 		ball.gameObject.transform.position = new Vector2 (0, 0);
 		ball.attachedRigidbody.velocity = new Vector2 (0, 0);
@@ -55,7 +58,7 @@ public class GlobalState : MonoBehaviour
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 
-		sb.Append("p;");
+		sb.Append ("p;");
 		//ball x,y,velocityX,velocityY
 		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
 		sb.Append (GameObjectString (ball));
@@ -78,26 +81,11 @@ public class GlobalState : MonoBehaviour
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 		
-		sb.Append("g;");
-
+		sb.Append ("g;");
 		//result x-y
-		sb.Append (getScore());
+		sb.Append (getScore ());
+		sb.Append (GameState ().Substring (1));
 
-		//ball x,y,velocityX,velocityY
-		GameObject ball = GameObject.FindGameObjectWithTag ("Ball");
-		sb.Append (";" + GameObjectString (ball));
-		
-		//players team,id,username,x,y,velocityX,velocityY
-		foreach (Player pl in awayPlayers) {
-			sb.Append (";"
-			           + pl.id + ',' 
-			           + GameObjectString (pl.gameObject));
-		}
-		foreach (Player pl in homePlayers) {
-			sb.Append (";"
-			           + pl.id + ',' 
-			           + GameObjectString (pl.gameObject));
-		}
 		return sb.ToString ();
 	}
 	
@@ -199,8 +187,9 @@ public class GlobalState : MonoBehaviour
 			+ go.GetComponent<Rigidbody2D> ().velocity.y.ToString ("N6");
 	}
 
-	public static void TeamScored(Player.Team team){
-		if (Player.Team == Player.Team.Away) {
+	public static void TeamScored (Player.Team team)
+	{
+		if (team == Player.Team.Away) {
 			awayScore++;
 		} else {
 			homeScore++;
