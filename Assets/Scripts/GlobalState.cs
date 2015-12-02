@@ -97,7 +97,7 @@ public class GlobalState : MonoBehaviour
 	{
 		System.Text.StringBuilder sb = new System.Text.StringBuilder ();
 		//result
-		sb.Append ("k");
+		sb.Append ("k;");
 
 		sb.Append (GlobalState.constants);
 
