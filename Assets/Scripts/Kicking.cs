@@ -3,12 +3,13 @@ using System.Collections;
 
 public class Kicking : MonoBehaviour
 {
-	public float power = 260f;
+	public float power = 20f;
 
 	private CircleCollider2D colider;
 	private CircleCollider2D ballColider;
 	private Rigidbody2D ballBody;
 	private Player player;
+	private int lastShot = 0;
 
 	void Start ()
 	{
@@ -22,11 +23,13 @@ public class Kicking : MonoBehaviour
 	void FixedUpdate ()
 	{
 		if (player.isPressed (Player.PressedKey.Shoot) 
-			&& colider.IsTouching (ballColider)) {
+			&& colider.IsTouching (ballColider)
+			&& Time.frameCount - lastShot > 2) {
 
+			lastShot = Time.frameCount;
 			Vector2 v = ballBody.gameObject.transform.position - transform.position;
 			v = v / v.magnitude;
-			v = v * power;
+			v = v * power * 100;
 			ballBody.AddForce (v);
 		}
 	}
